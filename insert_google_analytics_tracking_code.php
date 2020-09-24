@@ -244,7 +244,6 @@ function insert_google_analytics_plugin_render_tracking_ID_field() {
 function insert_google_analytics_plugin_sanitisation( $input ) {
 
 	$newTrackingID = "";
-	error_log( "\$input: " . $input );
 
 	if ( isset( $input ) ) {
 		$newTrackingID = sanitize_text_field( $input );
