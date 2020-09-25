@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Plugin Name: Insert Google's Analytics Tracking Code
+ * Plugin Name: Insert Tracking Code for Google Analytics
  * Plugin URI: https://github.com/TravisNice/Insert-Google-Analytics-Tracking-Code
  * Description: Inserts the Google Analytics tracking code, requiring only the website's Tracking ID
  * Version: 1.0.8

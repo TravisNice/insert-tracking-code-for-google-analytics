@@ -1,4 +1,4 @@
-=== Insert Google's Analytics Tracking Code ===
+=== Insert Tracking Code for Google Analytics ===
 Contributors: tjnice
 Tags: google, analytics, tracking
 Requires at least: 3.5
