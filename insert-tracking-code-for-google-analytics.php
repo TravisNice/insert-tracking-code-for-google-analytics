@@ -4,7 +4,7 @@
  * Plugin Name: Insert Tracking Code for Google Analytics
  * Plugin URI: https://github.com/TravisNice/Insert-Google-Analytics-Tracking-Code
  * Description: Inserts the Google Analytics tracking code, requiring only the website's Tracking ID
- * Version: 1.0.8
+ * Version: 1.0.9
  * Author: Travis Nice
  * Author URI: https://www.nice.id.au/design
  * License: GPL2
@@ -19,6 +19,14 @@ defined ( 'ABSPATH' ) or die ( 'Get out of my plugin!' );
 
 
 
+if ( !defined( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION' ) ) {
+
+	define( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION', '1.0.9' );
+
+}
+
+
+
 /**
  * The installation routines that are run when the plugin is activated
  *
@@ -27,22 +35,93 @@ defined ( 'ABSPATH' ) or die ( 'Get out of my plugin!' );
  */
 
 
+
 function insert_google_analytics_plugin_activation() {
 
+	/**
+        * @package Google Analytics
+        * @since 1.0.9
+        */
+
+	$option = 'insert_google_analytics_plugin_version';
+	if ( get_option( $option ) === false ) {
+
+		update_option( $option, INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION );
+
+	}
+
+	/**
+        * @package Google Analytics
+        * @since 1.0.9
+        */
+
+	$option = 'insert_google_analytics_plugin_tracking_type';
+	if ( get_option( $option ) === false ) {
+
+		update_option( $option, 'global' );
+
+	}
+
+	/**
+        * @package Google Analytics
+        * @since 1.0.0
+        */
+
 	$option = 'insert_google_analytics_plugin_tracking_ID';
-	add_option( $option );
+	if ( get_option( $option ) === false ) {
+
+		update_option( $option, "" );
+
+	}
+
+	/**
+        * @package Google Analytics
+        * @since 1.0.0
+        */
 
 	$file = __FILE__;
 	$callback = 'insert_google_analytics_plugin_uninstall_callback';
-	register_uninstall_hook( __FILE__, $callback );
+	register_uninstall_hook( $file, $callback );
+
+	/**
+        * @package Google Analytics
+        * @since 1.0.0
+        */
 
 	$file = __FILE__;
 	$callback = 'insert_google_analytics_plugin_deactivate_callback';
-	register_deactivation_hook( __FILE__, $callback );
+	register_deactivation_hook( $file, $callback );
 
 }
 
 register_activation_hook( __FILE__, 'insert_google_analytics_plugin_activation' );
+
+
+
+/**
+ * Check if the plugin was updated, and if so, run the activation function to
+ * to make sure that the new options are available.
+ *
+ * @package Google Analytics
+ * @since 1.0.9
+ */
+
+
+
+function insert_google_analytics_plugin_check_version() {
+
+	$option = 'insert_google_analytics_plugin_version';
+	if ( get_option( $option ) !== INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION ) {
+
+		update_option( $option, INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION );
+
+		insert_google_analytics_plugin_activation();
+
+	}
+
+}
+
+add_action( 'plugins_loaded', 'insert_google_analytics_plugin_check_version' );
 
 
 
@@ -58,6 +137,15 @@ register_activation_hook( __FILE__, 'insert_google_analytics_plugin_activation' 
 
 function insert_google_analytics_plugin_uninstall_callback () {
 
+	 /** @since 1.0.9 */
+	$option = 'insert_google_analytics_plugin_version';
+	delete_option( $option );
+
+	 /** @since 1.0.9 */
+	$option = 'insert_google_analytics_plugin_tracking_type';
+	delete_option( $option );
+
+	 /** @since 1.0.0 */
 	$option = 'insert_google_analytics_plugin_tracking_ID';
 	delete_option( $option );
 
@@ -65,6 +153,12 @@ function insert_google_analytics_plugin_uninstall_callback () {
 
 function insert_google_analytics_plugin_deactivate_callback () {
 
+	 /** @since 1.0.9 */
+	$option_group = 'insert_google_analytics_plugin_option_group';
+	$option_name = 'insert_google_analytics_plugin_tracking_type';
+	unregister_setting( $option_group, $option_name );
+
+	 /** @since 1.0.0 */
 	$option_group = 'insert_google_analytics_plugin_option_group';
 	$option_name = 'insert_google_analytics_plugin_tracking_ID';
 	unregister_setting( $option_group, $option_name );
@@ -144,7 +238,9 @@ function insert_google_analytics_plugin_options_page() {
 	 */
 
 	if ( !current_user_can( 'manage_options' ) ) {
+
 		wp_die( __( 'You do not have the required privileges to access this page.' ) );
+
 	}
 
 	echo '<div class="wrap">';
@@ -177,23 +273,46 @@ function insert_google_analytics_plugin_options_page() {
 
 function insert_google_analytics_plugin_option_settings() {
 
+	 /** @since 1.0.9 */
+	$option_group = 'insert_google_analytics_plugin_option_group';
+	$option_name = 'insert_google_analytics_plugin_tracking_type';
+	$args = array(
+		'type' => 'string',
+		'description' => 'Provides a choice between Universal Analytics and Global Site Tag.',
+		'sanitize_callback' => 'insert_google_analytics_plugin_sanitise_type',
+		'show_in_rest' => FALSE,
+		'default' => "global",
+	);
+	register_setting( $option_group, $option_name, $args );
+
+	 /** @since 1.0.0 */
 	$option_group = 'insert_google_analytics_plugin_option_group';
 	$option_name = 'insert_google_analytics_plugin_tracking_ID';
 	$args = array(
 		'type' => 'string',
 		'description' => 'Makes the tracking ID persistent.',
-		'sanitize_callback' => 'insert_google_analytics_plugin_sanitisation',
+		'sanitize_callback' => 'insert_google_analytics_plugin_sanitise_text',
 		'show_in_rest' => FALSE,
 		'default' => "",
 	);
 	register_setting( $option_group, $option_name, $args );
 
+	 /** @since 1.0.0 */
 	$id = 'insert_google_analytics_plugin_tracking_ID_section';
 	$title = 'Tracking ID';
 	$callback = 'insert_google_analytics_plugin_render_tracking_ID_section';
 	$page = 'insert_google_analytics_plugin_options_menu';
 	add_settings_section( $id, $title, $callback, $page );
 
+	 /** @since 1.0.9 */
+	$id = 'insert_google_analytics_plugin_tracking_type_field';
+	$title = 'Tracking Type';
+	$callback = 'insert_google_analytics_plugin_render_tracking_type_field';
+	$page = 'insert_google_analytics_plugin_options_menu';
+	$section = 'insert_google_analytics_plugin_tracking_ID_section';
+	add_settings_field( $id, $title, $callback, $page, $section );
+
+	 /** @since 1.0.0 */
 	$id = 'insert_google_analytics_plugin_tracking_ID_field';
 	$title = 'Tracking ID';
 	$callback = 'insert_google_analytics_plugin_render_tracking_ID_field';
@@ -216,12 +335,53 @@ add_action( 'admin_init', 'insert_google_analytics_plugin_option_settings' );
 
 
 
+ /** @since 1.0.0 */
 function insert_google_analytics_plugin_render_tracking_ID_section() {
 
 	echo "<p>You can find your Tracking ID from the Admin section of your Google Analytics Console. You may wish to follow <a href=\"https://support.google.com/analytics/answer/1032385\" rel=\"external\">Google's instructions</a> if you don't know where it is.</p>";
 
 }
 
+ /** @since 1.0.9 */
+function insert_google_analytics_plugin_render_tracking_type_field() {
+
+	$trackingType = get_option( 'insert_google_analytics_plugin_tracking_type' );
+
+	switch ( $trackingType ) {
+
+		case 'global':
+			echo "<input type=\"radio\" id=\"global\" name=\"tracking_type\" value=\"global\"  checked>";
+			echo "<label for=\"global\">Global Site Tag</label><br />";
+
+			echo "<input type=\"radio\" id=\"universal\" name=\"tracking_type\" value=\"universal\">";
+			echo "<label for=\"universal\">Universal Analytics</label><br />";
+
+			break;
+
+
+		case 'universal':
+			echo "<input type=\"radio\" id=\"global\" name=\"tracking_type\" value=\"global\">";
+			echo "<label for=\"global\">Global Site Tag</label><br />";
+
+			echo "<input type=\"radio\" id=\"universal\" name=\"tracking_type\" value=\"universal\" checked>";
+			echo "<label for=\"universal\">Universal Analytics</label><br />";
+
+			break;
+
+		default:
+			echo "<input type=\"radio\" id=\"global\" name=\"tracking_type\" value=\"global\">";
+			echo "<label for=\"global\">Global Site Tag</label><br />";
+
+			echo "<input type=\"radio\" id=\"universal\" name=\"tracking_type\" value=\"universal\">";
+			echo "<label for=\"universal\">Universal Analytics</label><br />";
+
+			break;
+
+	}
+
+}
+
+ /** @since 1.0.0 */
 function insert_google_analytics_plugin_render_tracking_ID_field() {
 
 	$trackingID = get_option( 'insert_google_analytics_plugin_tracking_ID' );
@@ -241,15 +401,32 @@ function insert_google_analytics_plugin_render_tracking_ID_field() {
 
 
 
-function insert_google_analytics_plugin_sanitisation( $input ) {
+function insert_google_analytics_plugin_sanitise_text( $input ) {
 
-	$newTrackingID = "";
+	$newValue = "";
 
 	if ( isset( $input ) ) {
-		$newTrackingID = sanitize_text_field( $input );
+		$newValue = sanitize_text_field( $input );
 	}
 
-	return $newTrackingID;
+	return $newValue;
+
+}
+
+
+
+/**
+ * Sanitise the input from the sanitize_callback above
+ *
+ * @package Google Analytics
+ * @since 1.0.9
+ */
+
+
+
+function insert_google_analytics_plugin_sanitise_type( $input ) {
+
+	return $_POST[ "tracking_type" ];
 
 }
 
@@ -270,7 +447,20 @@ function insert_google_analytics_plugin_render_footer() {
 
 	if ( isset ( $trackingID ) === true && $trackingID !== '' ) {
 
-		echo "<!-- Google Analytics --><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', '" . $trackingID . "', 'auto');ga('send', 'pageview');</script><!-- End Google Analytics -->";
+		/** @since 1.0.9 */
+		$trackingType = get_option( 'insert_google_analytics_plugin_tracking_type' );
+
+		switch ( $trackingType ) {
+
+			case 'universal':
+				echo "<!-- Google Analytics --><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', '" . $trackingID . "', 'auto');ga('send', 'pageview');</script><!-- End Google Analytics -->";
+				break;
+
+			case 'global':
+				echo "<!-- Global site tag (gtag.js) - Google Analytics --><script async src=\"https://www.googletagmanager.com/gtag/js?id=" . $trackingID . "\"></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '". $trackingID ."');</script>";
+				break;
+
+		}
 
 	}
 
