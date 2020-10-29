@@ -1,21 +1,23 @@
 === Insert Tracking Code for Google Analytics ===
 Contributors: tjnice
-Tags: google, analytics, tracking
+Tags: google, analytics, tracking, universal analytics, global site tag
 Requires at least: 3.5
 Tested up to: 5.5.1
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A user friendly way to insert your Universal Analytics tracking code into your website.
+A user friendly way to insert your tracking code into your website.
 
 == Description ==
 
 All you have to do, to insert your Google Analytics Tracking Code into your website is:
 
-*	Copy your Universal Analytics Tracking ID from:
-	[Google Analytics](https://analytics.google.com/analytics)
-*	Paste the Tracking ID into Settings > Google Analytics > Tracking ID
+*	Copy your Google Analytics Property from:
+	[Google Analytics](https://analytics.google.com/analytics), or
+	[Google Support](https://support.google.com/analytics/answer/10089681)
+*	Paste the Property into Settings > Google Analytics > Tracking ID
+*	Set that you are using the Universal Analytics Property or the Global Site Tag
 *	Save the settings and the plugin inserts the required code to track
 	visitors to your website.
 
@@ -34,6 +36,9 @@ You can find more information, and contact the author at:
 *	Use the Settings->Google Analytics screen to paste your tracking id
 
 == Changelog ==
+
+= 1.0.9 =
+*	Added support for Global Site Tags as well as Universal Analytics
 
 = 1.0.8 =
 *	I've been on hiatus, but am now back in action and updating all my code under my personal account rather than my previous business account.
