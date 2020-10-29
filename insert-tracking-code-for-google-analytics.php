@@ -4,7 +4,7 @@
  * Plugin Name: Insert Tracking Code for Google Analytics
  * Plugin URI: https://github.com/TravisNice/Insert-Google-Analytics-Tracking-Code
  * Description: Inserts the Google Analytics tracking code, requiring only the website's Tracking ID
- * Version: 1.1
+ * Version: 1.1.1
  * Author: Travis Nice
  * Author URI: https://www.nice.id.au/design
  * License: GPL2
@@ -21,7 +21,7 @@ defined ( 'ABSPATH' ) or die ( 'Get out of my plugin!' );
 
 if ( !defined( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION' ) ) {
 
-	define( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION', '1.1' );
+	define( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION', '1.1.1' );
 
 }
 
@@ -58,7 +58,7 @@ function insert_google_analytics_plugin_activation() {
 	$option = 'insert_google_analytics_plugin_tracking_type';
 	if ( get_option( $option ) === false ) {
 
-		update_option( $option, 'global' );
+		update_option( $option, 'universal' );
 
 	}
 
