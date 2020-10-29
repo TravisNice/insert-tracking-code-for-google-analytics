@@ -3,7 +3,7 @@ Contributors: tjnice
 Tags: google, analytics, tracking, universal analytics, global site tag
 Requires at least: 3.5
 Tested up to: 5.5.1
-Stable tag: 1.1
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,8 @@ You can find more information, and contact the author at:
 *	Use the Settings->Google Analytics screen to paste your tracking id
 
 == Changelog ==
+= 1.1.1 =
+*	Changed the default to Universal Analytics just in case this updates with a UA property already set.
 
 = 1.1 =
 *	Added support for Global Site Tags as well as Universal Analytics
