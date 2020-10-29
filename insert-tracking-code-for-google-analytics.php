@@ -4,7 +4,7 @@
  * Plugin Name: Insert Tracking Code for Google Analytics
  * Plugin URI: https://github.com/TravisNice/Insert-Google-Analytics-Tracking-Code
  * Description: Inserts the Google Analytics tracking code, requiring only the website's Tracking ID
- * Version: 1.0.9
+ * Version: 1.1
  * Author: Travis Nice
  * Author URI: https://www.nice.id.au/design
  * License: GPL2
@@ -21,7 +21,7 @@ defined ( 'ABSPATH' ) or die ( 'Get out of my plugin!' );
 
 if ( !defined( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION' ) ) {
 
-	define( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION', '1.0.9' );
+	define( 'INSERT_GOOGLE_ANALYTICS_PLUGIN_VERSION', '1.1' );
 
 }
 
@@ -40,7 +40,7 @@ function insert_google_analytics_plugin_activation() {
 
 	/**
         * @package Google Analytics
-        * @since 1.0.9
+        * @since 1.1
         */
 
 	$option = 'insert_google_analytics_plugin_version';
@@ -52,7 +52,7 @@ function insert_google_analytics_plugin_activation() {
 
 	/**
         * @package Google Analytics
-        * @since 1.0.9
+        * @since 1.1
         */
 
 	$option = 'insert_google_analytics_plugin_tracking_type';
@@ -103,7 +103,7 @@ register_activation_hook( __FILE__, 'insert_google_analytics_plugin_activation' 
  * to make sure that the new options are available.
  *
  * @package Google Analytics
- * @since 1.0.9
+ * @since 1.1
  */
 
 
@@ -137,11 +137,11 @@ add_action( 'plugins_loaded', 'insert_google_analytics_plugin_check_version' );
 
 function insert_google_analytics_plugin_uninstall_callback () {
 
-	 /** @since 1.0.9 */
+	 /** @since 1.1 */
 	$option = 'insert_google_analytics_plugin_version';
 	delete_option( $option );
 
-	 /** @since 1.0.9 */
+	 /** @since 1.1 */
 	$option = 'insert_google_analytics_plugin_tracking_type';
 	delete_option( $option );
 
@@ -153,7 +153,7 @@ function insert_google_analytics_plugin_uninstall_callback () {
 
 function insert_google_analytics_plugin_deactivate_callback () {
 
-	 /** @since 1.0.9 */
+	 /** @since 1.1 */
 	$option_group = 'insert_google_analytics_plugin_option_group';
 	$option_name = 'insert_google_analytics_plugin_tracking_type';
 	unregister_setting( $option_group, $option_name );
@@ -273,7 +273,7 @@ function insert_google_analytics_plugin_options_page() {
 
 function insert_google_analytics_plugin_option_settings() {
 
-	 /** @since 1.0.9 */
+	 /** @since 1.1 */
 	$option_group = 'insert_google_analytics_plugin_option_group';
 	$option_name = 'insert_google_analytics_plugin_tracking_type';
 	$args = array(
@@ -304,7 +304,7 @@ function insert_google_analytics_plugin_option_settings() {
 	$page = 'insert_google_analytics_plugin_options_menu';
 	add_settings_section( $id, $title, $callback, $page );
 
-	 /** @since 1.0.9 */
+	 /** @since 1.1 */
 	$id = 'insert_google_analytics_plugin_tracking_type_field';
 	$title = 'Tracking Type';
 	$callback = 'insert_google_analytics_plugin_render_tracking_type_field';
@@ -342,7 +342,7 @@ function insert_google_analytics_plugin_render_tracking_ID_section() {
 
 }
 
- /** @since 1.0.9 */
+ /** @since 1.1 */
 function insert_google_analytics_plugin_render_tracking_type_field() {
 
 	$trackingType = get_option( 'insert_google_analytics_plugin_tracking_type' );
@@ -419,7 +419,7 @@ function insert_google_analytics_plugin_sanitise_text( $input ) {
  * Sanitise the input from the sanitize_callback above
  *
  * @package Google Analytics
- * @since 1.0.9
+ * @since 1.1
  */
 
 
@@ -447,7 +447,7 @@ function insert_google_analytics_plugin_render_footer() {
 
 	if ( isset ( $trackingID ) === true && $trackingID !== '' ) {
 
-		/** @since 1.0.9 */
+		/** @since 1.1 */
 		$trackingType = get_option( 'insert_google_analytics_plugin_tracking_type' );
 
 		switch ( $trackingType ) {
